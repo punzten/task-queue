@@ -56,6 +56,8 @@ class TaskQueue:
                     [getattr(available_resources, field.name) >= getattr(task.resources, field.name)
                      for field in fields(Resources)]
             ):
+                for task in not_satisfied:
+                    self.queue.put(task)
                 return task
             else:
                 not_satisfied.append(task)

@@ -28,8 +28,8 @@ def task(resources):
 
 
 @pytest.fixture
-def task2(resources):
-    return Task(id=2, priority=10, resources=resources, content='content')
+def task2(resources2):
+    return Task(id=2, priority=10, resources=resources2, content='content')
 
 
 def test_simple_add(task_queue, task):
@@ -54,3 +54,10 @@ def test_priority_order(task_queue, task, task2, resources2):
     task_queue.add_task(task2)
     t = task_queue.get_task(available_resources=resources2)
     assert t.priority == min(task.priority, task2.priority)
+
+
+def test_queue_remembering_tasks(task_queue, task, task2, resources):
+    task_queue.add_task(task)
+    task_queue.add_task(task2)
+    t = task_queue.get_task(available_resources=resources)
+    assert task_queue.size() == 1
